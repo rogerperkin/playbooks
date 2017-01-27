@@ -1,5 +1,5 @@
 ---
-- hosts: CSR-02
+- hosts: CSR-01
   gather_facts: true
   connection: local
 
