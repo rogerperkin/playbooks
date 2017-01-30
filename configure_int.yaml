@@ -1,0 +1,28 @@
+---
+- hosts: CSR-01
+  gather_facts: false
+  connection: local
+
+  tasks:
+   - name: configure Gig1 settings
+     ios_config:
+       lines:
+         - description test interface
+         - no ip address
+         - shut
+       parents: interface GigabitEthernet1
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
+   - name: configure NTP Server and copy run start
+     ios_config:
+       lines:
+         - ntp server 145.56.55.1
+         - do write memory 
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
