@@ -1,6 +1,6 @@
 ---
 - hosts: CSR-01
-  gather_facts: true
+  gather_facts: false
   connection: local
 
   tasks:
