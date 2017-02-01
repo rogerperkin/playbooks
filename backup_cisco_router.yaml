@@ -7,7 +7,7 @@
    - name: show run 
      ios_command:
        commands:
-         - show run   
+         - show version   
        host: "{{ ansible_host }}"
        username: roger
        password: password123
