@@ -1,0 +1,37 @@
+---
+- hosts: CSR
+  gather_facts: false
+  connection: local
+
+  tasks:
+   - name: configure Gig2 settings
+     ios_config:
+       lines:
+         - description test interface
+         - ip address 10.0.0.1 255.255.255.0 
+         - shut
+       parents: interface GigabitEthernet2
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
+   - name: configure NTP Server
+     ios_config:
+       lines:
+         - ntp server 125.56.55.53  
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
+   - name: SAVE CONFIG 
+     ios_command:
+       commands:
+         - write memory
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
+
