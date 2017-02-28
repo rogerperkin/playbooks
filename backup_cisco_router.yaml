@@ -1,13 +1,13 @@
 ---
-- hosts: CSR-02
-  gather_facts: true
+- hosts: CSR-01
+  gather_facts: false
   connection: local
 
   tasks:
    - name: show run 
      ios_command:
        commands:
-         - show run   
+         - show version   
        host: "{{ ansible_host }}"
        username: roger
        password: password123
