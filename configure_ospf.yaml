@@ -1,0 +1,27 @@
+---
+- hosts: CSR 
+
+  gather_facts: false
+  connection: local 
+
+  tasks: 
+   - name: Configure OSFP 100 and put all interfaces into Area 0 
+     ios_config:
+       lines: 
+         - network 10.0.0.0 0.0.0.255 area 0
+       parents: router ospf 100 
+
+       host: "{{ ansible_host }}"
+       username: roger 
+       password: password123  
+
+   - name: SAVE CONFIG 
+     ios_command:
+       commands:
+         - write memory
+
+       host: "{{ ansible_host }}"
+       username: roger
+       password: password123
+
+      
