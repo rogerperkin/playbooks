@@ -1,0 +1,50 @@
+---
+- hosts: CSR
+  gather_facts: false
+  connection: local 
+
+  vars:
+    cli:
+      host: "{{ansible_host}}"
+      username: roger
+      password: password123
+      transport: cli
+    my_list: []
+
+  tasks: 
+  - name: show interfaces 
+    ios_facts: 
+      gather_subset: "interfaces"
+      provider: "{{ cli }}"
+
+  - name: get interface
+    set_fact: 
+      my_list: '{{my_list + [item]}}'
+    with_items: "{{ ansible_net_interfaces }}"
+
+  - debug:
+      var: my_list
+
+  - name: loop through 
+    with_items: " {{ my_list }}"
+    ios_command:
+      commands: show run interface {{ item }} | inc description 
+      provider: "{{ cli }}"
+    register: output
+
+  - name: show output
+    with_indexed_items: "{{ my_list }}"
+    debug: var=output.results[{{ item.0 }}].stdout
+
+
+  - block: 
+    - name: write config to interface 
+      with_indexed_items: " {{ my_list }} "
+      ios_config:
+        lines: description CHANGED
+        parents: interface {{ item.1 }}
+        provider: "{{ cli }}" 
+        match: none
+      when: "' description ANSIBLE' in output.results[{{ item.0 }}].stdout"
+
+ 
