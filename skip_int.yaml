@@ -1,14 +1,9 @@
 ---
-- hosts: CSR
+- hosts: ios
   gather_facts: false
-  connection: local 
+  connection: local
 
-  vars:
-    cli:
-      host: "{{ansible_host}}"
-      username: roger
-      password: password123
-      transport: cli
+  vars: 
     my_list: []
 
   tasks: 
@@ -28,12 +23,12 @@
   - name: loop through 
     with_items: " {{ my_list }}"
     ios_command:
-      commands: show run interface {{ item }} | inc description 
+      commands: show interface {{ item }} switchport | inc Operational Mode 
       provider: "{{ cli }}"
     register: output
 
   - name: show output
-    with_indexed_items: "{{ my_list }}"
+    with_indexed_items: "{{ my_list[0:2] }}"
     debug: var=output.results[{{ item.0 }}].stdout
 
 
@@ -41,10 +36,11 @@
     - name: write config to interface 
       with_indexed_items: " {{ my_list }} "
       ios_config:
-        lines: description CHANGED
+        lines: description STATUS is UP - "config by Ansible"
+        replace: line 
         parents: interface {{ item.1 }}
         provider: "{{ cli }}" 
         match: none
-      when: "' description ANSIBLE' in output.results[{{ item.0 }}].stdout"
+      when: "'Operational Mode: static access' in output.results[{{ item.0 }}].stdout"
 
  
