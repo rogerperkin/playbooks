@@ -1,0 +1,7 @@
+---
+cli: 
+  username:  "roger"
+  password:  "password123"
+  host:      "{{ansible_host}}"
+  authorize: yes
+
