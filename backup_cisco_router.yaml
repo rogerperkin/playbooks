@@ -1,5 +1,5 @@
 ---
-- hosts: CSR-01
+- hosts: CSR
   gather_facts: false
   connection: local
 
@@ -7,10 +7,7 @@
    - name: show run 
      ios_command:
        commands:
-         - show version   
-       host: "{{ ansible_host }}"
-       username: roger
-       password: password123
+         - show run   
      register: config
 
    - name: save output to /etc/ansible/backups 
