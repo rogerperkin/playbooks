@@ -1,5 +1,5 @@
 ---
-- hosts: CSR 
+- hosts: CSR-Laptop 
 
   gather_facts: false
   connection: local 
@@ -9,19 +9,16 @@
      ios_config:
        lines: 
          - network 10.0.0.0 0.0.0.255 area 0
-       parents: router ospf 100 
-
-       host: "{{ ansible_host }}"
-       username: roger 
-       password: password123  
+       parents: router ospf 100          
 
    - name: SAVE CONFIG 
      ios_command:
        commands:
          - write memory
 
-       host: "{{ ansible_host }}"
-       username: roger
-       password: password123
+   - name: Verify OSPF interface is Active
+     ios_command:
+       commands: 
+         - sh run | sec router ospf 
 
       
