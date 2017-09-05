@@ -20,5 +20,6 @@
      ios_command:
        commands: 
          - sh run | sec router ospf 
-
+       waitfor:
+         - result[0] contains 'router ospf 100'
       

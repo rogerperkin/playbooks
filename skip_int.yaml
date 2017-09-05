@@ -1,5 +1,5 @@
 ---
-- hosts: ios
+- hosts: 3560-SW1
   gather_facts: false
   connection: local
 
@@ -10,7 +10,6 @@
   - name: show interfaces 
     ios_facts: 
       gather_subset: "interfaces"
-      provider: "{{ cli }}"
 
   - name: get interface
     set_fact: 
@@ -28,7 +27,7 @@
     register: output
 
   - name: show output
-    with_indexed_items: "{{ my_list[0:2] }}"
+    with_indexed_items: "{{ my_list[0:32] }}"
     debug: var=output.results[{{ item.0 }}].stdout
 
 
@@ -36,11 +35,16 @@
     - name: write config to interface 
       with_indexed_items: " {{ my_list }} "
       ios_config:
-        lines: description STATUS is UP - "config by Ansible"
+        authorize: yes
+        lines: description STATUS is UP - "Configured by Ansible"
         replace: line 
-        parents: interface {{ item.1 }}
-        provider: "{{ cli }}" 
+        parents: interface {{ item.1 }} 
         match: none
-      when: "'Operational Mode: static access' in output.results[{{ item.0 }}].stdout"
+      when: "'Operational Mode: static access' in output.results[item.0].stdout"
 
- 
+  - name: SAVE CONFIG
+    ios_command:
+      authorize: yes
+      commands:
+        - write memory
+
