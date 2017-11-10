@@ -1,0 +1,23 @@
+---
+- hosts: 3560-SW1
+
+  gather_facts: false
+  connection: local 
+
+  tasks:
+   - name: Configure ACL for CISCO SMART COLLECTOR
+     ios_config:
+       authorize: yes
+       lines:
+         - access-l 99 permit 172.16.191.199
+       save: yes  
+
+   - name: Verify ACL is present 
+     ios_command: 
+       commands:
+         - sh access-l 
+       waitfor: 
+         - result[0] contains 'permit 172.16.191.138'
+
+
+       
