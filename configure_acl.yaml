@@ -5,19 +5,25 @@
   connection: local 
 
   tasks:
-   - name: Configure ACL for CISCO SMART COLLECTOR
+   - name: Configure ACL on Cisco Switch 
      ios_config:
        authorize: yes
        lines:
-         - access-l 99 permit 172.16.191.199
-       save: yes  
+         - access-list 99 permit 172.16.1.100  
 
    - name: Verify ACL is present 
      ios_command: 
        commands:
          - sh access-l 
        waitfor: 
-         - result[0] contains 'permit 172.16.191.138'
+         - result[0] contains 'permit 172.16.1.100'
+
+   - name: SAVE CONFIG 
+     ios_config: 
+       authorize: yes
+       save: yes
+
+
 
 
        
